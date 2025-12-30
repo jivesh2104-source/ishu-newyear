@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy New Year Ishu 💖</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: 'Georgia', serif;
+  background: radial-gradient(circle at top, #fff0f6, #ffe6f0);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* Glow */
+.glow {
+  position: absolute;
+  width: 500px;
+  height: 500px;
+  background: rgba(255, 182, 193, 0.35);
+  filter: blur(120px);
+  animation: glowMove 12s infinite alternate ease-in-out;
+}
+@keyframes glowMove {
+  from { transform: translate(-120px, -120px); }
+  to { transform: translate(120px, 120px); }
+}
+
+/* Moon */
+.moon {
+  position: absolute;
+  top: 40px;
+  right: 50px;
+  width: 80px;
+  height: 80px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 0 40px #fff;
+}
+
+/* Card */
+.container {
+  position: relative;
+  z-index: 2;
+  background: rgba(255,255,255,0.7);
+  backdrop-filter: blur(12px);
+  padding: 34px;
+  border-radius: 24px;
+  max-width: 92%;
+  text-align: center;
+}
+
+h1 {
+  color: #ff4d88;
+  text-shadow: 0 0 15px #ffb3cc;
+}
+
+#countdown {
+  color: #ff6fa5;
+  margin-bottom: 12px;
+}
+
+#message {
+  color: #444;
+  line-height: 1.65;
+  min-height: 220px;
+}
+
+/* Start Button */
+#startBtn {
+  background:#ff9fc2;
+  border:none;
+  padding:12px 20px;
+  border-radius:22px;
+  color:white;
+  font-size:1rem;
+  cursor:pointer;
+  margin-bottom:14px;
+}
+
+/* Hearts */
+.heart {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  background: #ff9fc2;
+  transform: rotate(45deg);
+  animation: floatUp 8s infinite;
+}
+.heart::before,.heart::after {
+  content:"";
+  position:absolute;
+  width:18px;
+  height:18px;
+  background:#ff9fc2;
+  border-radius:50%;
+}
+.heart::before { top:-9px; }
+.heart::after { left:-9px; }
+@keyframes floatUp {
+  from { bottom:-10%; opacity:1; }
+  to { bottom:110%; opacity:0; transform:scale(1.4); }
+}
+
+/* Fireworks */
+.firework {
+  position:absolute;
+  width:6px;
+  height:6px;
+  background:white;
+  border-radius:50%;
+  animation: firework 2s ease-out;
+}
+@keyframes firework {
+  from { transform:scale(0); opacity:1; }
+  to { transform:scale(7); opacity:0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="glow"></div>
+<div class="moon"></div>
+
+<div class="container">
+  <h1>Happy New Year, Ishu 🌸</h1>
+  <div id="countdown"></div>
+
+  <button id="startBtn">Tap to Begin 💖</button>
+
+  <div id="message"></div>
+</div>
+
+<!-- 🎵 Background Music (Muted First) -->
+<audio id="bgMusic" loop muted>
+  <source src="https://cdn.pixabay.com/download/audio/2022/10/26/audio_7c2b7e98e6.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const music = document.getElementById("bgMusic");
+const btn = document.getElementById("startBtn");
+
+// START MUSIC — GUARANTEED
+btn.addEventListener("click", () => {
+  music.muted = false;
+  music.volume = 0;
+  music.play();
+
+  // Fade in volume
+  let v = 0;
+  const fade = setInterval(() => {
+    if (v < 0.4) {
+      v += 0.02;
+      music.volume = v;
+    } else {
+      clearInterval(fade);
+    }
+  }, 200);
+
+  btn.style.display = "none";
+});
+
+// Hearts
+for(let i=0;i<16;i++){
+  let h=document.createElement("div");
+  h.className="heart";
+  h.style.left=Math.random()*100+"vw";
+  document.body.appendChild(h);
+}
+
+// Fireworks
+setInterval(()=>{
+  let f=document.createElement("div");
+  f.className="firework";
+  f.style.left=Math.random()*100+"vw";
+  f.style.top=Math.random()*40+"vh";
+  document.body.appendChild(f);
+  setTimeout(()=>f.remove(),2000);
+},1200);
+
+// Countdown
+function updateCountdown(){
+  const now=new Date();
+  const ny=new Date(now.getFullYear()+1,0,1);
+  const d=ny-now;
+  if(d<=0){
+    document.getElementById("countdown").innerHTML="✨ A new chapter begins ✨";
+    return;
+  }
+  const h=Math.floor(d/(1000*60*60));
+  const m=Math.floor((d%(1000*60*60))/(1000*60));
+  const s=Math.floor((d%(1000*60))/1000);
+  document.getElementById("countdown").innerHTML=
+    `⏳ ${h}h ${m}m ${s}s until New Year`;
+}
+setInterval(updateCountdown,1000);
+updateCountdown();
+
+// Typewriter
+const text=`In a world full of chaos,
+you became my calm.
+
+Another year turns its page,
+and all I wish is to keep
+choosing you —
+in smiles, in storms, in silence.
+
+You are my soft place to fall,
+my favorite thought,
+my always.
+
+Here’s to us,
+and a love that grows brighter every year 💖✨`;
+
+let i=0;
+function typeText(){
+  if(i<text.length){
+    document.getElementById("message").innerHTML+=
+      text[i]==="\n"?"<br>":text[i];
+    i++;
+    setTimeout(typeText,45);
+  }
+}
+setTimeout(typeText,1200);
+</script>
+
+</body>
+</html>
